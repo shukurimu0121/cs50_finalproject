@@ -1,0 +1,26 @@
+/* background-color for navbar */
+nav
+{
+    background-color: green;
+}
+
+/* Size for brand */
+nav .navbar-brand
+{
+    font-size: xx-large;
+}
+
+/* Font and color for brand */
+nav .navbar-brand .win
+{
+    font-family: impact;
+    font-weight: bold;
+    color: white;
+}
+
+/* background-color for footer */
+.footer
+{
+    background-color: green;
+}
+
