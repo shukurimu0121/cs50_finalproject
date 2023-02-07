@@ -42,8 +42,21 @@ def index():
 def course():
     """Course Setting"""
     # Only teacher can use
-    # get user's type
-    
+    # get user's type from database
+    user_id = session["user_id"]
+    usertype = db.execute("SELECT type FROM users WHERE id = ?", user_id)[0]["type"]
+    if usertype != "teacher":
+        return render_template("apology.html", msg="Only teacher can use this page")
+
+    # When POST
+    if request.method = "POST":
+        
+
+    # When GET
+    else:
+        return render_template("course.html")
+
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
