@@ -85,7 +85,8 @@ def course():
             return render_template("apology.html", msg="Register only your class")
 
         # Insert to database
-        db.execute
+        db.execute("INSERT INTO classes (user_id, subject, month, day, hour, mintue) VALUES(?, ?, ?, ?, ?, ?)", user_id, subject, month, day, hour, minute)
+        return redirect("/")
 
     # When GET
     else:
