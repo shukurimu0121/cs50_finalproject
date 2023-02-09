@@ -64,6 +64,8 @@ def course():
     # When POST
     if request.method = "POST":
         # Get from request
+        teachername = request.form.get("teachername")
+        studentname = request.form.get("studentname")
         subject = request.form.get("sbuject")
         month = request.form.get("month")
         day = request.form.get("day")
@@ -77,7 +79,7 @@ def course():
         if subject not in SUBJECTS or month not in MONTHS or day not in DAYS or hour not in HOURS or minute not in MINUTES:
             return render_template("apology.html", msg="must provide accurate input")
 
-        
+
 
 
     # When GET
