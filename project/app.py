@@ -55,7 +55,7 @@ def course():
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
 
-    SUBJECTS = [Language, Classic, Moth, English, History, Physics, Chemistry]
+    SUBJECTS = ["Language", "Classic", "Moth", "English", "History", "Physics", "Chemistry"]
     MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
     HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
@@ -155,13 +155,14 @@ def logout():
 def register():
     """Register user"""
     # Two User Type
-    TYPES = [teacher, ]
+    TYPES = ["teacher", "student"]
 
     # When POST
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
+        usertype = request.form.get("type")
 
         # Ensure username was submitted
         if not username:
@@ -179,6 +180,11 @@ def register():
         elif password != confirmation:
             return render_template("apology.html", msg="must provide the same passwords")
 
+        # Check type is valid
+        elif usertype not in TYPES:
+            return render_template("apology.html", msg="Invalid Type")
+
+
         # Check the username already exists
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE name = ?", username)
@@ -188,13 +194,13 @@ def register():
         else:
             # Insert username and password hash to table
             password_hash = generate_password_hash(password)
-            db.execute("INSERT INTO users (name, hash) VALUES(?, ?)", username, password_hash)
+            db.execute("INSERT INTO users (name, hash, type) VALUES(?, ?, ?)", username, password_hash, usertype)
 
             # redirect log in page
             return redirect("/")
 
     else:
-        return render_template("register.html")
+        return render_template("register.html", types=TYPES)
 
 
 
