@@ -36,6 +36,7 @@ def login_required(f):
 @login_required
 def index():
     """Show user's schedule"""
+    return render_template("apology.html", msg="This page is preparing now")
 
 @app.route("/course", methods=["GET", "POST"])
 @login_required
@@ -50,7 +51,7 @@ def course():
 
     # When POST
     if request.method = "POST":
-        
+
 
     # When GET
     else:
