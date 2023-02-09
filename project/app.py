@@ -154,6 +154,8 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
+    # Two User Type
+    TYPES = [teacher, ]
 
     # When POST
     if request.method == "POST":
