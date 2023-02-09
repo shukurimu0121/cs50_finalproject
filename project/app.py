@@ -124,7 +124,7 @@ def login():
             return render_template("apology.html", msg="must provide password")
 
         # Get all username from database
-        rows = db.execute("SELECT * FROM users WHERE username = ?", username)
+        rows = db.execute("SELECT * FROM users WHERE name = ?", username)
 
         # Check the username and password are correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], password):
