@@ -179,8 +179,8 @@ def register():
 
         # Check the username already exists
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", username)
-        if rows:
+        rows = db.execute("SELECT * FROM users WHERE name = ?", username)
+        if rows or rows == None:
             return render_template("apology.html", msg="the username is already used")
 
         else:
