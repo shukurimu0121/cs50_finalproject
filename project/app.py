@@ -186,7 +186,7 @@ def register():
         else:
             # Insert username and password hash to table
             password_hash = generate_password_hash(password)
-            db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", username, password_hash)
+            db.execute("INSERT INTO users (name, hash) VALUES(?, ?)", username, password_hash)
 
             # redirect log in page
             return redirect("/")
