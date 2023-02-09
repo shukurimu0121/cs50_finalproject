@@ -85,6 +85,7 @@ def course():
             return render_template("apology.html", msg="Register only your class")
 
         # Insert to database
+        db.execute
 
     # When GET
     else:
