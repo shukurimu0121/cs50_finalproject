@@ -62,7 +62,7 @@ def course():
     MINUTES = [0, 15, 30, 45]
 
     # When POST
-    if request.method = "POST":
+    if request.method == "POST":
         # Get from request
         teachername = request.form.get("teachername")
         studentname = request.form.get("studentname")
