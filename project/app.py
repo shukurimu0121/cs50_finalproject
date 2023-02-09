@@ -58,15 +58,31 @@ def course():
     SUBJECTS = [Language, Classic, Moth, English, History, Physics, Chemistry]
     MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
-    HOURS = []
+    HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+    MINUTES = [0, 15, 30, 45]
 
     # When POST
     if request.method = "POST":
+        # Get from request
+        subject = request.form.get("sbuject")
+        month = request.form.get("month")
+        day = request.form.get("day")
+        hour = request.form.get("hour")
+        minute = request.form.get("minute")
+
+        # Check the form is correct
+        if not subject or not month or not day or not hour or not minute:
+            return render_template("apology.html", msg="must provide input")
+
+        if subject not in SUBJECTS or month not in MONTHS or day not in DAYS or hour not in HOURS or minute not in MINUTES:
+            return render_template("apology.html", msg="must provide accurate input")
+
+        
 
 
     # When GET
     else:
-        return render_template("course.html")
+        return render_template("course.html", subject=SUBJECTS, month=MONTHS, days=DAYS, hours=HOURS, minutes=MINUTES)
 
 @app.route("/entire")
 @login_required
