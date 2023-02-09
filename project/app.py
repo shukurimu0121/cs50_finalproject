@@ -30,6 +30,13 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# is_teacher
+def is_teacher(user_id):
+    usertype = db.execute("SELECT type FROM users WHERE id = ?", user_id)[0]["type"]
+    if usertype != "teacher":
+        return False
+    else:
+        return True
 
 # each route
 @app.route("/", methods=["GET", "POST"])
@@ -45,17 +52,26 @@ def course():
     # Only teacher can use
     # get user's type from database
     user_id = session["user_id"]
-    usertype = db.execute("SELECT type FROM users WHERE id = ?", user_id)[0]["type"]
-    if usertype != "teacher":
+    if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
 
     # When POST
     if request.method = "POST":
-
+        
 
     # When GET
     else:
         return render_template("course.html")
+
+@app.route("/entire")
+@login_required
+def entire():
+    "Show Entire Schedule to only teacher"
+    # Only teacher can use
+    # get user's type from database
+    user_id = session["user_id"]
+    if is_teacher(user_id) == False:
+        return render_template("apology.html", msg="Only teacher can use this page")
 
 
 
