@@ -73,14 +73,18 @@ def course():
         minute = request.form.get("minute")
 
         # Check the form is correct
-        if not subject or not month or not day or not hour or not minute:
+        if not teachername or not studentname or not subject or not month or not day or not hour or not minute:
             return render_template("apology.html", msg="must provide input")
 
         if subject not in SUBJECTS or month not in MONTHS or day not in DAYS or hour not in HOURS or minute not in MINUTES:
             return render_template("apology.html", msg="must provide accurate input")
 
+        # Teacher can register only their own course
+        teacher = db.execute("SELECT name FROM users WHERE id = ?", user_id)[0]["name"]
+        if teachername != teacher:
+            return render_template("apology.html", msg="Register only your class")
 
-
+        # Insert to database
 
     # When GET
     else:
