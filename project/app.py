@@ -55,9 +55,14 @@ def course():
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
 
+    SUBJECTS = [Language, Classic, Moth, English, History, Physics, Chemistry]
+    MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+    HOURS = []
+
     # When POST
     if request.method = "POST":
-        
+
 
     # When GET
     else:

@@ -13,11 +13,46 @@
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="studentname" placeholder="Student Name" type="text">
         </div>
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="subject" placeholder="Subject" type="text">
+            <select name="subject">
+                <option disable selected>Subject</option>
+                {% for subject in subjects %}
+                    <option>{{ subject }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" min="1" max="12" name="month" placeholder="Shares" type="number">
+            <select name="month">
+                <option disable selected>Month</option>
+                {% for month in months %}
+                    <option>{{ month }}</option>
+                {% endfor %}
+            </select>
         </div>
-        <button class="btn btn-primary" type="submit">Buy</button>
+        <div class="mb-3">
+            <select name="day">
+                <option disable selected>Day</option>
+                {% for day in days %}
+                    <option>{{ day }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <select name="hour">
+                <option disable selected>Hour</option>
+                {% for hour in hours %}
+                    <option>{{ hour }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <select name="minute">
+                <option disable selected>Minute</option>
+                {% for minute in minutes %}
+                    <option>{{ minute }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Course Register</button>
     </form>
 {% endblock %}
