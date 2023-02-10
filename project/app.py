@@ -43,7 +43,27 @@ def is_teacher(user_id):
 @login_required
 def index():
     """Show user's schedule"""
-    return render_template("apology.html", msg="This page is preparing now")
+    # Get user_id
+    user_id = session["user_id"]
+
+    # When POST
+    if request.method =="POST":
+
+    else:
+        # If user is teacher
+        if is_teacher(user_id) == True:
+            classes = db.execute("SELECT * FROM classes WHERE user_id = ?", user_id)
+            return render_template("index.html", classes=classes)
+
+        # If user is student
+        else:
+            username = db.execute("SELECT name FROM users WHERE id = ?", user_id)[0]["name"]
+            classes = db.execute("SELECT * FROM classes WHERE studentname LIKE '%?%'", username)
+            return render_template("index.html", classes=classes)
+
+
+        return render_template("index.html")
+
 
 @app.route("/course", methods=["GET", "POST"])
 @login_required
@@ -85,12 +105,12 @@ def course():
             return render_template("apology.html", msg="Register only your class")
 
         # Insert to database
-        db.execute("INSERT INTO classes (user_id, subject, month, day, hour, mintue) VALUES(?, ?, ?, ?, ?, ?)", user_id, subject, month, day, hour, minute)
+        db.execute("INSERT INTO classes (user_id, studentname, subject, month, day, hour, mintue) VALUES(?, ?, ?, ?, ?, ?, ?)", user_id, studentname, subject, month, day, hour, minute)
         return redirect("/")
 
     # When GET
     else:
-        return render_template("course.html", subject=SUBJECTS, month=MONTHS, days=DAYS, hours=HOURS, minutes=MINUTES)
+        return render_template("course.html", subjects=SUBJECTS, months=MONTHS, days=DAYS, hours=HOURS, minutes=MINUTES)
 
 @app.route("/entire")
 @login_required
@@ -101,6 +121,8 @@ def entire():
     user_id = session["user_id"]
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
+
+
 
 
 
