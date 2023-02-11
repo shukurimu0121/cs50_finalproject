@@ -13,7 +13,7 @@
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="studentname" placeholder="Student Name" type="text">
         </div>
         <div class="mb-3">
-            <select class="form-select" name="subject">
+            <select class="form-select mx-auto w-auto" name="subject">
                 <option disable selected>Subject</option>
                 {% for subject in subjects %}
                     <option>{{ subject }}</option>
@@ -21,25 +21,25 @@
             </select>
         </div>
         <div class="mb-3">
-            <select class="form-select" name="month">
+            <select class="form-select mx-auto w-auto" name="month">
                 <option disable selected>Month</option>
                 {% for month in months %}
                     <option>{{ month }}</option>
                 {% endfor %}
             </select>
-            <select class="form-select" name="day">
+            <select class="form-select mx-auto w-auto" name="day">
                 <option disable selected>Day</option>
                 {% for day in days %}
                     <option>{{ day }}</option>
                 {% endfor %}
             </select>
-            <select class="form-select" name="hour">
+            <select class="form-select mx-auto w-auto" name="hour">
                 <option disable selected>Hour</option>
                 {% for hour in hours %}
                     <option>{{ hour }}</option>
                 {% endfor %}
             </select>
-            <select class="form-select" name="minute">
+            <select class="form-select mx-auto w-auto" name="minute">
                 <option disable selected>Minute</option>
                 {% for minute in minutes %}
                     <option>{{ minute }}</option>

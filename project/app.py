@@ -39,30 +39,48 @@ def is_teacher(user_id):
         return True
 
 # each route
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 @login_required
 def index():
     """Show user's schedule"""
     # Get user_id
     user_id = session["user_id"]
 
-    # When POST
-    if request.method =="POST":
+    # If user is teacher
+    if is_teacher(user_id) == True:
+        classes = db.execute("SELECT * FROM classes WHERE user_id = ?", user_id)
+        return render_template("index.html", classes=classes)
+
+    # If user is student
+    else:
+        username = db.execute("SELECT name FROM users WHERE id = ?", user_id)[0]["name"]
+        classes = db.execute("SELECT * FROM classes WHERE studentname LIKE '%?%'", username)
+        return render_template("index.html", classes=classes)
+
+@app.route("/deregister", methods=["POST"])
+def deregister():
+    """Deregister class"""
+     # Delete the class
+
+    # Only teacher or student can delete the class
+    # If teacher
+    if is_teacher(user_id) == True:
+        # Check user is a teacher of the class
+        teacherid = db.execute("SELECT user_id FROM classes WHERE id = ?", classeid)[0]["user_id"]
+        if user_id == teacherid:
+            db.execute("DELETE FROM classes WHERE id = ?", classid)
+        else:
+            return render_template("apology.html", msg="You can delete only your class.")
 
     else:
-        # If user is teacher
-        if is_teacher(user_id) == True:
-            classes = db.execute("SELECT * FROM classes WHERE user_id = ?", user_id)
-            return render_template("index.html", classes=classes)
+        # Check user is a student of the class
+        studentname1 = db.execute("SELECT studentname FROM classes WHERE id = ?", classeid)[0]["studentname"]
+        studentname2 = db.execute("SELECT name FROM users WHERE id = ?", user_id)[0]["name"]
 
-        # If user is student
+        if studentname1 == studentname2:
+            db.execute("DELETE FROM classes WHERE id = ?", classid)
         else:
-            username = db.execute("SELECT name FROM users WHERE id = ?", user_id)[0]["name"]
-            classes = db.execute("SELECT * FROM classes WHERE studentname LIKE '%?%'", username)
-            return render_template("index.html", classes=classes)
-
-
-        return render_template("index.html")
+            return render_template("apology.html", msg="You can delete only your class.")
 
 
 @app.route("/course", methods=["GET", "POST"])
@@ -86,11 +104,11 @@ def course():
         # Get from request
         teachername = request.form.get("teachername")
         studentname = request.form.get("studentname")
-        subject = request.form.get("sbuject")
-        month = request.form.get("month")
-        day = request.form.get("day")
-        hour = request.form.get("hour")
-        minute = request.form.get("minute")
+        subject = request.form.get("subject")
+        month = int(request.form.get("month"))
+        day = int(request.form.get("day"))
+        hour = int(request.form.get("hour"))
+        minute = int(request.form.get("minute"))
 
         # Check the form is correct
         if not teachername or not studentname or not subject or not month or not day or not hour or not minute:
@@ -105,7 +123,7 @@ def course():
             return render_template("apology.html", msg="Register only your class")
 
         # Insert to database
-        db.execute("INSERT INTO classes (user_id, studentname, subject, month, day, hour, mintue) VALUES(?, ?, ?, ?, ?, ?, ?)", user_id, studentname, subject, month, day, hour, minute)
+        db.execute("INSERT INTO classes (user_id, teachername, studentname, subject, month, day, hour, minute) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", user_id, teachername, studentname, subject, month, day, hour, minute)
         return redirect("/")
 
     # When GET
@@ -121,10 +139,6 @@ def entire():
     user_id = session["user_id"]
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
-
-
-
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
