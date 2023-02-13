@@ -43,7 +43,7 @@ def is_teacher(user_id):
 # make week calendar HTML
 def get_week_calendar_html():
     now = datetime.now()
-    html = "<table border='1'>"
+    html = "<table class='table table-striped' border='1'>"
 
     html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
     html += "<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>"
