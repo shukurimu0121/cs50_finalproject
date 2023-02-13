@@ -40,27 +40,24 @@ def is_teacher(user_id):
     else:
         return True
 
-def get_calendar_html(year):
-    now = datetime(year, 1, 1)
-    end = datetime(year, 12, 31)
-    html = "<table border='1'>"
+# get week calendar
+def get_week_calendar_html():
+    now = datetime.now()
+    html = "<html><body><table border='1'>"
 
-    while now.year == year:
-        html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
-        html += "<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>"
-        html += "<tr>"
-        first_weekday, last_day = calendar.monthrange(now.year, now.month)
-        current_day = 1
-        while current_day <= last_day:
-            html += "<td>" + str(current_day) + "</td>"
-            if (first_weekday + current_day - 1) % 7 == 6:
-                html += "</tr><tr>"
-            current_day += 1
-            if current_day <= last_day:
-                first_weekday = 0
-        now += timedelta(days=last_day)
+    html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
+    html += "<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>"
+    html += "<tr>"
 
-    html += "</table>"
+    start_weekday = (now - timedelta(days=now.weekday())).weekday()
+    for i in range(start_weekday):
+        html += "<td></td>"
+    current_day = now.day
+    for i in range(7 - start_weekday):
+        html += "<td>" + str(current_day) + "</td>"
+        current_day += 1
+
+    html += "</table></body></html>"
     return html
 
 # each route
@@ -117,10 +114,8 @@ def calender():
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
 
-    # Get datetime now
-    dt_now = datetime.now()
-    year = dt_now.year
-    html = get_calendar_html(year)
+    # Get calenar html
+    html = get_week_calendar_html()
 
     return render_template("calendar.html", html=html)
 
