@@ -115,9 +115,9 @@ def calender():
         return render_template("apology.html", msg="Only teacher can use this page")
 
     # Get calenar html
-    html = get_week_calendar_html()
+    
 
-    return render_template("calendar.html", html=html)
+    return render_template("calendar.html")
 
 
 @app.route("/course", methods=["GET", "POST"])
