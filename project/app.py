@@ -116,7 +116,9 @@ def calender():
 
     # Get calendar HTML
     html = get_week_calendar_html()
-    
+
+    # Get class data from now to a week
+
 
     return render_template("calendar.html", html=html)
 
