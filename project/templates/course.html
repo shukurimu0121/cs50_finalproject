@@ -20,7 +20,13 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 d-flex">
+            <select class="form-select mx-auto w-auto" name="year">
+                <option disable selected>YEAR</option>
+                {% for year in years %}
+                    <option>{{ year }}</option>
+                {% endfor %}
+            </select>
             <select class="form-select mx-auto w-auto" name="month">
                 <option disable selected>Month</option>
                 {% for month in months %}

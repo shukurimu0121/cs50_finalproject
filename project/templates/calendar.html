@@ -8,25 +8,21 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th class="text-start">Mon</th>
-                <th class="text-start">Tue</th>
-                <th class="text-end">Wed</th>
-                <th class="text-end">Thr</th>
-                <th class="text-end">Fri</th>
-                <th class="text-end">Sat</th>
-                <th class="text-end">Sun</th>
+                {% for i in range(7) %}
+                <th class="text-start">{{ weeks[i]["month"] }}/{{ weeks[i]["day"] }} ( {{ weeks[i]["weekday"] }} )</th>
+                {% endfor %}
             </tr>
         </thead>
-    <tbody>
-            {% for class in classes %}
-                <tr>
-                    <td class="text-start">{{ class["month"] }}</td>
-                    <td class="text-start">{{ class["day"] }}</td>
-                    <td class="text-end">{{ class["hour"] }}:{{ class["minute"] }}</td>
-                    <td class="text-end">{{ class["teachername"] }}</td>
-                    <td class="text-end">{{ class["studentname"] }}</td>
-                    <td class="text-end">{{ class["subject"] }}</td>
-                </tr>
+        <tbody>
+            {% for i in range(7) %}
+                    {% if classes[i] == None %}
+                    <td></td>
+                    {% else %}
+                        {% for row in rows %}
+                            <td>{{ classes[i]["hour"]}}:{{ classes[i]["minute"]}} {{ classes[i]["studentname"]}}({{ classes[i]["teachername"]}})({{ classes[i]["subject"]}})</td>
+                        {% endfor %}
+                    {% endif %}
+
             {% endfor %}
         </tbody>
     </table>

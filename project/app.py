@@ -4,7 +4,6 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
-import calendar
 from datetime import datetime, timedelta
 
 # Configure application
@@ -40,29 +39,6 @@ def is_teacher(user_id):
     else:
         return True
 
-# make week calendar HTML
-def get_week_calendar(events={}):
-    now = datetime.now()
-    html = "<table border='1'>"
-
-    html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
-    html += "<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>"
-    html += "<tr>"
-
-    start_weekday = (now - timedelta(days=now.weekday())).weekday()
-    for i in range(start_weekday):
-        html += "<td></td>"
-    current_day = now.day
-    for i in range(7 - start_weekday):
-        day = now.replace(day=current_day)
-        classes = db.execute("SELECT studentname, teachername, subject FROM classes WHERE month = ? AND day = ?", now.month, day)
-        event = events.get(day.strftime("%Y-%m-%d"), "")
-        html += "<td>" + str(current_day) + "<br>" + event + "</td>"
-        current_day += 1
-
-    html += "</table>"
-    return Markup(html)
-
 # each route
 @app.route("/")
 @login_required
@@ -85,31 +61,15 @@ def index():
 @app.route("/deregister", methods=["POST"])
 def deregister():
     """Deregister class"""
-     # Delete the class
-
-    # Only teacher or student can delete the class
-    # If teacher
-    if is_teacher(user_id) == True:
-        # Check user is a teacher of the class
-        teacherid = db.execute("SELECT user_id FROM classes WHERE id = ?", classeid)[0]["user_id"]
-        if user_id == teacherid:
-            db.execute("DELETE FROM classes WHERE id = ?", classid)
-        else:
-            return render_template("apology.html", msg="You can delete only your class.")
-
-    else:
-        # Check user is a student of the class
-        studentname1 = db.execute("SELECT studentname FROM classes WHERE id = ?", classeid)[0]["studentname"]
-        studentname2 = db.execute("SELECT name FROM users WHERE id = ?", user_id)[0]["name"]
-
-        if studentname1 == studentname2:
-            db.execute("DELETE FROM classes WHERE id = ?", classid)
-        else:
-            return render_template("apology.html", msg="You can delete only your class.")
+    # Delete the class
+    # Get From form
+    classid = request.form.get("classid")
+    db.execute("DELETE FROM classes WHERE id = ?", classid)
+    return redirect("/")
 
 @app.route("/calendar")
 @login_required
-def calender():
+def calendar():
     """Show Entire Class Calendar and Print"""
     # Only teacher can use
     # get user's type from database
@@ -117,14 +77,30 @@ def calender():
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
 
-    # Get calendar HTML
-    html = get_week_calendar_html()
+    # Get datetime and make each data
+    dt_now = datetime.now()
+    year = dt_now.year
+    weeks = [{}, {}, {}, {}, {}, {}, {}]
+    classes = []
+    for i in range(7):
+        # Set week info
+        d = dt_now + timedelta(days=i)
+        weeks[i]["month"] = d.month
+        weeks[i]["day"] = d.day
+        weeks[i]["weekday"] = d.strftime("%A")
+        rows = db.execute("SELECT hour, minute, teachername, studentname, subject FROM classes WHERE year = ? AND month = ? AND day = ?", year, d.month, d.day)
+        if rows == None:
+            classes.append("None")
+        else:
+            classes.append(rows)
 
-    # Get class data from now to a week
+    return render_template("calendar.html", weeks=weeks, classes=classes)
 
 
 
-    return render_template("calendar.html", html=html)
+
+
+    return render_template("calendar.html", weeks=WEEKS, classes=CLASSES)
 
 
 @app.route("/course", methods=["GET", "POST"])
@@ -138,6 +114,7 @@ def course():
         return render_template("apology.html", msg="Only teacher can use this page")
 
     SUBJECTS = ["Language", "Classic", "Moth", "English", "History", "Physics", "Chemistry"]
+    YEARS = [2023, 2024, 2025, 2026]
     MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
     HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
@@ -149,16 +126,17 @@ def course():
         teachername = request.form.get("teachername")
         studentname = request.form.get("studentname")
         subject = request.form.get("subject")
+        year = int(request.form.get("year"))
         month = int(request.form.get("month"))
         day = int(request.form.get("day"))
         hour = int(request.form.get("hour"))
         minute = int(request.form.get("minute"))
 
         # Check the form is correct
-        if not teachername or not studentname or not subject or not month or not day or not hour or not minute:
+        if not teachername or not studentname or not subject or not year or not month or not day or not hour or not minute:
             return render_template("apology.html", msg="must provide input")
 
-        if subject not in SUBJECTS or month not in MONTHS or day not in DAYS or hour not in HOURS or minute not in MINUTES:
+        if subject not in SUBJECTS or year not in YEARS or month not in MONTHS or day not in DAYS or hour not in HOURS or minute not in MINUTES:
             return render_template("apology.html", msg="must provide accurate input")
 
         # Teacher can register only their own course
@@ -167,12 +145,12 @@ def course():
             return render_template("apology.html", msg="Register only your class")
 
         # Insert to database
-        db.execute("INSERT INTO classes (user_id, teachername, studentname, subject, month, day, hour, minute) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", user_id, teachername, studentname, subject, month, day, hour, minute)
+        db.execute("INSERT INTO classes (user_id, teachername, studentname, subject, year, month, day, hour, minute) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", user_id, teachername, studentname, subject, year, month, day, hour, minute)
         return redirect("/")
 
     # When GET
     else:
-        return render_template("course.html", subjects=SUBJECTS, months=MONTHS, days=DAYS, hours=HOURS, minutes=MINUTES)
+        return render_template("course.html", subjects=SUBJECTS, years=YEARS, months=MONTHS, days=DAYS, hours=HOURS, minutes=MINUTES)
 
 @app.route("/entire")
 @login_required
@@ -185,7 +163,7 @@ def entire():
         return render_template("apology.html", msg="Only teacher can use this page")
 
     # Display entire schedule
-    classes = db.execute("SELECT * FROM classes ORDER BY month, day, hour, minute")
+    classes = db.execute("SELECT * FROM classes ORDER BY year, month, day, hour, minute")
     return render_template("entire.html", classes=classes)
 
 @app.route("/login", methods=["GET", "POST"])
