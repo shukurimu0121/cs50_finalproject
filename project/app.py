@@ -51,7 +51,6 @@ def get_week_calendar_html():
 
     start_weekday = (now - timedelta(days=now.weekday())).weekday()
     for i in range(start_weekday):
-        
         html += "<td></td>"
     current_day = now.day
     for i in range(7 - start_weekday):
