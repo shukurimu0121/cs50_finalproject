@@ -43,7 +43,6 @@ def is_teacher(user_id):
 # make week calendar HTML
 def get_week_calendar_html():
     now = datetime.now()
-    day = datetime.day()
     html = "<table class='table table-striped' border='1'>"
 
     html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
@@ -58,7 +57,7 @@ def get_week_calendar_html():
         html += "<td>" + str(current_day) + "</td>"
         current_day += 1
 
-    html += "</table>"
+    html += "</tr>"
     return Markup(html)
 
 # each route
@@ -117,6 +116,7 @@ def calender():
 
     # Get calendar HTML
     html = get_week_calendar_html()
+    
 
     return render_template("calendar.html", html=html)
 
