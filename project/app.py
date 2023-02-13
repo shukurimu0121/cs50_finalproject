@@ -107,7 +107,7 @@ def deregister():
         else:
             return render_template("apology.html", msg="You can delete only your class.")
 
-@app.route("/calender")
+@app.route("/calendar")
 @login_required
 def calender():
     """Show Entire Class Calendar and Print"""
