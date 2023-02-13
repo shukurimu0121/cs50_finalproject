@@ -114,8 +114,10 @@ def calender():
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
 
-    # Get calenar html
-    
+    # Get current datetime
+    dt_now = datetime.now()
+    month = dt_now.month
+    day = 
 
     return render_template("calendar.html")
 
