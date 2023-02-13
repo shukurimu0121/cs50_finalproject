@@ -1,5 +1,5 @@
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, Markup
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -40,10 +40,10 @@ def is_teacher(user_id):
     else:
         return True
 
-# get week calendar
+# make week calendar HTML
 def get_week_calendar_html():
     now = datetime.now()
-    html = "<html><body><table border='1'>"
+    html = "<table border='1'>"
 
     html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
     html += "<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>"
@@ -57,8 +57,8 @@ def get_week_calendar_html():
         html += "<td>" + str(current_day) + "</td>"
         current_day += 1
 
-    html += "</table></body></html>"
-    return html
+    html += "</table>"
+    return Markup(html)
 
 # each route
 @app.route("/")
@@ -114,12 +114,10 @@ def calender():
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
 
-    # Get current datetime
-    dt_now = datetime.now()
-    month = dt_now.month
-    day = 
+    # Get calendar HTML
+    html = get_week_calendar_html()
 
-    return render_template("calendar.html")
+    return render_template("calendar.html", html=html)
 
 
 @app.route("/course", methods=["GET", "POST"])
