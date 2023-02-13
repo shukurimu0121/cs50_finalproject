@@ -57,7 +57,7 @@ def get_week_calendar_html():
         html += "<td>" + str(current_day) + "</td>"
         current_day += 1
 
-    html += "</tr>"
+    html += "</tr></table>"
     return Markup(html)
 
 # each route
@@ -118,7 +118,7 @@ def calender():
     html = get_week_calendar_html()
 
     # Get class data from now to a week
-    
+
 
 
     return render_template("calendar.html", html=html)
