@@ -43,7 +43,7 @@ def is_teacher(user_id):
 def get_calendar_html(year):
     now = datetime(year, 1, 1)
     end = datetime(year, 12, 31)
-    html = "<html><body><table border='1'>"
+    html = "<table border='1'>"
 
     while now.year == year:
         html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
@@ -60,7 +60,7 @@ def get_calendar_html(year):
                 first_weekday = 0
         now += timedelta(days=last_day)
 
-    html += "</table></body></html>"
+    html += "</table>"
     return html
 
 # each route
@@ -70,11 +70,6 @@ def index():
     """Show user's schedule"""
     # Get user_id
     user_id = session["user_id"]
-
-    # Get datetime now
-    dt_now = datetime.datetime.now()
-    month = dt_now.month
-    day = dt_now.month
 
     # If user is teacher
     if is_teacher(user_id) == True:
