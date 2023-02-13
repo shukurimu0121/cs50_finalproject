@@ -40,6 +40,29 @@ def is_teacher(user_id):
     else:
         return True
 
+def get_calendar_html(year):
+    now = datetime(year, 1, 1)
+    end = datetime(year, 12, 31)
+    html = "<html><body><table border='1'>"
+
+    while now.year == year:
+        html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
+        html += "<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>"
+        html += "<tr>"
+        first_weekday, last_day = calendar.monthrange(now.year, now.month)
+        current_day = 1
+        while current_day <= last_day:
+            html += "<td>" + str(current_day) + "</td>"
+            if (first_weekday + current_day - 1) % 7 == 6:
+                html += "</tr><tr>"
+            current_day += 1
+            if current_day <= last_day:
+                first_weekday = 0
+        now += timedelta(days=last_day)
+
+    html += "</table></body></html>"
+    return html
+
 # each route
 @app.route("/")
 @login_required
