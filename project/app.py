@@ -4,6 +4,8 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
+import calendar
+from datetime import datetime, timedelta
 
 # Configure application
 app = Flask(__name__)
@@ -45,6 +47,11 @@ def index():
     """Show user's schedule"""
     # Get user_id
     user_id = session["user_id"]
+
+    # Get datetime now
+    dt_now = datetime.datetime.now()
+    month = dt_now.month
+    day = dt_now.month
 
     # If user is teacher
     if is_teacher(user_id) == True:
@@ -97,7 +104,7 @@ def course():
     MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
     HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
-    MINUTES = [0, 15, 30, 45]
+    MINUTES = [00, 15, 30, 45]
 
     # When POST
     if request.method == "POST":
@@ -139,6 +146,10 @@ def entire():
     user_id = session["user_id"]
     if is_teacher(user_id) == False:
         return render_template("apology.html", msg="Only teacher can use this page")
+
+    # Display entire schedule
+    classes = db.execute("SELECT * FROM classes ORDER BY month, day, hour, minute")
+    return render_template("entire.html", classes=classes)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
