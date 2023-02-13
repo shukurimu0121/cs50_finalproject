@@ -54,8 +54,8 @@ def get_week_calendar(events={}):
         html += "<td></td>"
     current_day = now.day
     for i in range(7 - start_weekday):
-        classes = db.execute("SELECT studentname, teachername, subject FROM classes WHERE month = ? AND day = ?", now.month, now.day)
         day = now.replace(day=current_day)
+        classes = db.execute("SELECT studentname, teachername, subject FROM classes WHERE month = ? AND day = ?", now.month, day)
         event = events.get(day.strftime("%Y-%m-%d"), "")
         html += "<td>" + str(current_day) + "<br>" + event + "</td>"
         current_day += 1
