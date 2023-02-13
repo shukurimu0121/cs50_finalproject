@@ -110,7 +110,7 @@ def deregister():
 @app.route("/calender")
 @login_required
 def calender():
-    """Show Entire Class Calender and Print"""
+    """Show Entire Class Calendar and Print"""
     # Only teacher can use
     # get user's type from database
     user_id = session["user_id"]
@@ -120,6 +120,9 @@ def calender():
     # Get datetime now
     dt_now = datetime.now()
     year = dt_now.year
+    html = get_calendar_html(year)
+
+    return render_template("calendar.html", html=html)
 
 
 @app.route("/course", methods=["GET", "POST"])
