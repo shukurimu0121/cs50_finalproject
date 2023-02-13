@@ -107,6 +107,20 @@ def deregister():
         else:
             return render_template("apology.html", msg="You can delete only your class.")
 
+@app.route("/calender")
+@login_required
+def calender():
+    """Show Entire Class Calender and Print"""
+    # Only teacher can use
+    # get user's type from database
+    user_id = session["user_id"]
+    if is_teacher(user_id) == False:
+        return render_template("apology.html", msg="Only teacher can use this page")
+
+    # Get datetime now
+    dt_now = datetime.now()
+    year = dt_now.year
+
 
 @app.route("/course", methods=["GET", "POST"])
 @login_required
