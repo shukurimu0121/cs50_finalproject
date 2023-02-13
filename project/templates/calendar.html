@@ -5,5 +5,29 @@
 {% endblock %}
 
 {% block main %}
-    {{ html }}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Mon</th>
+                <th class="text-start">Tue</th>
+                <th class="text-end">Wed</th>
+                <th class="text-end">Thr</th>
+                <th class="text-end">Fri</th>
+                <th class="text-end">Sat</th>
+                <th class="text-end">Sun</th>
+            </tr>
+        </thead>
+    <tbody>
+            {% for class in classes %}
+                <tr>
+                    <td class="text-start">{{ class["month"] }}</td>
+                    <td class="text-start">{{ class["day"] }}</td>
+                    <td class="text-end">{{ class["hour"] }}:{{ class["minute"] }}</td>
+                    <td class="text-end">{{ class["teachername"] }}</td>
+                    <td class="text-end">{{ class["studentname"] }}</td>
+                    <td class="text-end">{{ class["subject"] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
