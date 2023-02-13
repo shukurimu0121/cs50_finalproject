@@ -15,14 +15,7 @@
         </thead>
         <tbody>
             {% for i in range(7) %}
-                    {% if classes[i] == None %}
-                    <td></td>
-                    {% else %}
-                        {% for row in rows %}
-                            <td>{{ classes[i]["hour"]}}:{{ classes[i]["minute"]}} {{ classes[i]["studentname"]}}({{ classes[i]["teachername"]}})({{ classes[i]["subject"]}})</td>
-                        {% endfor %}
-                    {% endif %}
-
+                <td>{{ classes[i] }}</td>
             {% endfor %}
         </tbody>
     </table>

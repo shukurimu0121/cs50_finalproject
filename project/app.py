@@ -55,7 +55,7 @@ def index():
     # If user is student
     else:
         username = db.execute("SELECT name FROM users WHERE id = ?", user_id)[0]["name"]
-        classes = db.execute("SELECT * FROM classes WHERE studentname LIKE '%?%'", username)
+        classes = db.execute("SELECT * FROM classes WHERE studentname = ?", username)
         return render_template("index.html", classes=classes)
 
 @app.route("/deregister", methods=["POST"])
@@ -88,19 +88,18 @@ def calendar():
         weeks[i]["month"] = d.month
         weeks[i]["day"] = d.day
         weeks[i]["weekday"] = d.strftime("%A")
-        rows = db.execute("SELECT hour, minute, teachername, studentname, subject FROM classes WHERE year = ? AND month = ? AND day = ?", year, d.month, d.day)
+        rows = db.execute("SELECT hour, minute, teachername, studentname, subject FROM classes WHERE year = ? AND month = ? AND day = ? ORDER BY hour, minute", year, d.month, d.day)
         if rows == None:
-            classes.append("None")
+            html = "<td></td>"
+            classes.append(Markup(html))
         else:
-            classes.append(rows)
+            text = ""
+            for row in rows:
+                text += str(row["hour"]) + ":" + str(row["minute"]) + " " + row["studentname"] + " " + row["teachername"] + "(" + row["subject"] + ")" + "<br>"
+
+            classes.append(Markup(text))
 
     return render_template("calendar.html", weeks=weeks, classes=classes)
-
-
-
-
-
-    return render_template("calendar.html", weeks=WEEKS, classes=CLASSES)
 
 
 @app.route("/course", methods=["GET", "POST"])
@@ -118,7 +117,7 @@ def course():
     MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
     HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
-    MINUTES = [00, 15, 30, 45]
+    MINUTES = [0, 15, 30, 45]
 
     # When POST
     if request.method == "POST":
