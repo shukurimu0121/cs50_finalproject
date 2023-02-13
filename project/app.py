@@ -41,9 +41,9 @@ def is_teacher(user_id):
         return True
 
 # make week calendar HTML
-def get_week_calendar_html():
+def get_week_calendar(events={}):
     now = datetime.now()
-    html = "<table class='table table-striped' border='1'>"
+    html = "<table border='1'>"
 
     html += "<tr><td colspan='7' align='center'><b>" + now.strftime("%B %Y") + "</b></td></tr>"
     html += "<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>"
@@ -54,10 +54,12 @@ def get_week_calendar_html():
         html += "<td></td>"
     current_day = now.day
     for i in range(7 - start_weekday):
-        html += "<td>" + str(current_day) + "</td>"
+        day = now.replace(day=current_day)
+        event = events.get(day.strftime("%Y-%m-%d"), "")
+        html += "<td>" + str(current_day) + "<br>" + event + "</td>"
         current_day += 1
 
-    html += "</tr></table>"
+    html += "</table>"
     return Markup(html)
 
 # each route
