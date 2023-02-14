@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block main %}
-    <table class="table table-striped container">
+<div class="table-responsive">
+    <table class="table table-striped">
         <thead>
             <tr>
                 {% for i in range(7) %}
@@ -19,4 +20,5 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
 {% endblock %}
