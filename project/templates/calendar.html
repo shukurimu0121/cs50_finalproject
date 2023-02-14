@@ -10,13 +10,13 @@
         <thead>
             <tr>
                 {% for i in range(7) %}
-                <th>{{ weeks[i]["month"] }}/{{ weeks[i]["day"] }} ( {{ weeks[i]["weekday"] }} )</th>
+                <th class="text-nowrap">{{ weeks[i]["month"] }}/{{ weeks[i]["day"] }} ( {{ weeks[i]["weekday"] }} )</th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for i in range(7) %}
-                <td>{{ classes[i] }}</td>
+                <td class="text-nowrap">{{ classes[i] }}</td>
             {% endfor %}
         </tbody>
     </table>
