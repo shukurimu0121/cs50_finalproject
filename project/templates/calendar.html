@@ -5,15 +5,15 @@
 {% endblock %}
 
 {% block main %}
-    <table class="table table-striped w-100 h-auto">
-        <thead class="w-100">
+    <table class="table table-striped container">
+        <thead>
             <tr>
                 {% for i in range(7) %}
                 <th class="text-start">{{ weeks[i]["month"] }}/{{ weeks[i]["day"] }} ( {{ weeks[i]["weekday"] }} )</th>
                 {% endfor %}
             </tr>
         </thead>
-        <tbody class="w-100">
+        <tbody>
             {% for i in range(7) %}
                 <td>{{ classes[i] }}</td>
             {% endfor %}
