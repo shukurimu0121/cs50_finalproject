@@ -6,14 +6,14 @@
 
 {% block main %}
     <table class="table table-striped w-100 h-auto">
-        <thead>
+        <thead class="w-100">
             <tr>
                 {% for i in range(7) %}
                 <th class="text-start">{{ weeks[i]["month"] }}/{{ weeks[i]["day"] }} ( {{ weeks[i]["weekday"] }} )</th>
                 {% endfor %}
             </tr>
         </thead>
-        <tbody>
+        <tbody class="w-100">
             {% for i in range(7) %}
                 <td>{{ classes[i] }}</td>
             {% endfor %}
