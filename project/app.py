@@ -50,12 +50,16 @@ def index():
     # If user is teacher
     if is_teacher(user_id) == True:
         classes = db.execute("SELECT * FROM classes WHERE user_id = ?", user_id)
+        if classes == None:
+            return render_template("index.html")
         return render_template("index.html", classes=classes)
 
     # If user is student
     else:
         username = db.execute("SELECT name FROM users WHERE id = ?", user_id)[0]["name"]
         classes = db.execute("SELECT * FROM classes WHERE studentname = ?", username)
+        if classes == None:
+            return render_template("index.html")
         return render_template("index.html", classes=classes)
 
 @app.route("/deregister", methods=["POST"])
@@ -95,7 +99,7 @@ def calendar():
         else:
             text = ""
             for row in rows:
-                text += str(row["hour"]) + ":" + str(row["minute"]) + " " + row["studentname"] + " " + row["teachername"] + "(" + row["subject"] + ")" + "<br>"
+                text += str(row["hour"]) + ":" + row["minute"] + " " + row["studentname"] + " " + row["teachername"] + "(" + row["subject"] + ")" + "<br>"
 
             classes.append(Markup(text))
 
@@ -117,7 +121,7 @@ def course():
     MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
     HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
-    MINUTES = [0, 15, 30, 45]
+    MINUTES = ["00", "15", "30", "45"]
 
     # When POST
     if request.method == "POST":
@@ -129,7 +133,7 @@ def course():
         month = int(request.form.get("month"))
         day = int(request.form.get("day"))
         hour = int(request.form.get("hour"))
-        minute = int(request.form.get("minute"))
+        minute = request.form.get("minute")
 
         # Check the form is correct
         if not teachername or not studentname or not subject or not year or not month or not day or not hour or not minute:

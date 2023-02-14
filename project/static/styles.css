@@ -10,6 +10,11 @@ nav .navbar-brand
     font-size: xx-large;
 }
 
+.navbar-light .navbar-nav .nav-link
+{
+    color: white;
+}
+
 /* Font and color for brand */
 nav .navbar-brand .win
 {
